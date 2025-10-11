@@ -1,2 +1,3 @@
-# clone-tabnews
-Projeto de aprendizagem do curso.dev
+# Clone Tabnews
+
+Projeto de aprendizagem do `curso.dev`
