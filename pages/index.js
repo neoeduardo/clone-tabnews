@@ -1,8 +1,8 @@
 function Home() {
   return (
     <>
-      <img src="trollfaceONE.png"></img>
-      <p>Guardei tua pizza... na minha barriga!</p>
+      <h1>Barbara Sofia</h1>
+      <h2>Cadê meu Cookie Red Velvet com brigadeira de Cream Cheese?</h2>
     </>
   );
 }
