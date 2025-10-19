@@ -2,7 +2,7 @@ import migrationRunner from "node-pg-migrate";
 import { join } from "node:path";
 
 export default async function migrations(request, response) {
-  const migrations = await migrationRunner({
+  const defaultMigrationOptions = migrationRunner({
     databaseUrl: process.env.DATABASE_URL,
     dryRun: true,
     dir: join("infra", "migrations"), // Evita conflito de DIR entre diferentes SO
@@ -10,5 +10,19 @@ export default async function migrations(request, response) {
     verbose: true,
     migrationsTable: "pgmigrations",
   });
-  response.status(200).json([migrations]);
+
+  if (request.method === "GET") {
+    const migrations = await migrationRunner(defaultMigrationOptions);
+    return response.status(200).json([migrations]);
+  }
+
+  if (request.method === "POST") {
+    const migrations = await migrationRunner({
+      ...defaultMigrationOptions,
+      dryRun: false,
+    });
+    return response.status(200).json([migrations]);
+  }
+
+  return response.status(405).end();
 }
