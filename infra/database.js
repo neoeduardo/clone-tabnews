@@ -10,15 +10,6 @@ async function query(queryObject) {
     ssl: getSSLValues(),
   });
 
-  console.log({
-    host: process.env.POSTGRES_HOST,
-    port: process.env.POSTGRES_PORT,
-    user: process.env.POSTGRES_USER,
-    database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASSWORD,
-    ssl: getSSLValues(),
-  });
-
   try {
     await client.connect();
     const result = await client.query(queryObject);
@@ -31,10 +22,6 @@ async function query(queryObject) {
   }
 }
 
-export default {
-  query: query,
-};
-
 function getSSLValues() {
   if (process.env.POSTGRES_CA) {
     return {
@@ -44,3 +31,7 @@ function getSSLValues() {
 
   return process.env.NODE_ENV === "production" ? true : false;
 }
+
+export default {
+  query: query,
+};
