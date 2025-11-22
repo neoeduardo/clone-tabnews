@@ -1,12 +1,12 @@
 import database from "infra/database";
+import orchestrator from "tests/orchestrator.js";
 
-beforeAll(cleanDatabase); // antes de tudo, limpa o banco.
+beforeAll(async () => {
+  await orchestrator.waitForAllServices();
+  await database.query("drop schema public cascade; create schema public;");
+});
 
-async function cleanDatabase() {
-  await database.query("DROP SCHEMA public CASCADE; CREATE SCHEMA public;");
-}
-
-test("POST /api/v1/migrations should return 200", async () => {
+test("POST /api/v1/migrations should return 201", async () => {
   const response1 = await fetch("http://localhost:3000/api/v1/migrations", {
     method: "POST",
   });
@@ -15,15 +15,16 @@ test("POST /api/v1/migrations should return 200", async () => {
   expect(response1.status).toBe(201);
   expect(Array.isArray(responseBody1)).toBe(true);
   expect(responseBody1.length).toBeGreaterThan(0);
+});
 
+test("POST /api/v1/migrations should return 200", async () => {
   // Segunda requisição POST
   const response2 = await fetch("http://localhost:3000/api/v1/migrations", {
     method: "POST",
   });
+  expect(response2.status).toBe(200);
   const responseBody2 = await response2.json();
 
-  expect(response2.status).toBe(200);
   expect(Array.isArray(responseBody2)).toBe(true);
-  console.info(responseBody2);
   expect(responseBody2.length).toBe(0);
 });
